@@ -1,0 +1,21 @@
+{
+  "name": "file-handling-using-s3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "setup": "npm install && concurrently npm:install:*",
+    "install:client": "npm --prefix ./client install",
+    "install:infrastructure": "npm --prefix ./infrastructure install",
+    "start": "npm --prefix ./client run dev",
+    "synth": "npm --prefix ./infrastructure run synth",
+    "deploy": "npm --prefix ./infrastructure run deploy",
+    "destroy": "npm --prefix ./infrastructure run destroy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.1"
+  }
+}

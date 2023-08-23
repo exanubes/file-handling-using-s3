@@ -1,0 +1,29 @@
+.env
+!.env.example
+node_modules/
+**/.idea/
+**/.vscode/
+
+
+# Svelte
+client/.DS_Store
+client/node_modules
+client//build
+client//.svelte-kit
+client//package
+client/.env
+client/.env.*
+client/!.env.example
+client/vite.config.js.timestamp-*
+client/vite.config.ts.timestamp-*
+
+# Cdk
+
+infrastructure/*.js
+infrastructure/!jest.config.js
+infrastructure/*.d.ts
+infrastructure/node_modules
+
+## CDK asset staging directory
+infrastructure/.cdk.staging
+infrastructure/cdk.out
