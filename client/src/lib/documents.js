@@ -1,28 +1,39 @@
-import {databaseClient} from "$lib/database-client.js";
-
+import { z } from 'zod';
+import { databaseClient } from '$lib/database-client.js';
+import { documentValidator } from '$lib/validators.js';
+/**
+ * @description create new document in database
+ * @param {{
+ *     name: string;
+ *     key: string;
+ * }} props
+ * */
 export async function createDocument(props) {
-    const id = crypto.randomUUID();
+	const id = crypto.randomUUID();
 
-    await databaseClient.execute({
-        sql: 'INSERT INTO documents(id, name, key) VALUES(?,?,?)',
-        args: [id, props.name, props.key]
-    })
+	await databaseClient.execute({
+		sql: 'INSERT INTO documents(id, name, key) VALUES(?,?,?)',
+		args: [id, props.name, props.key]
+	});
 
-    return id
+	return id;
 }
 
 export async function listDocuments() {
-    const response = await databaseClient.execute('SELECT * FROM documents');
+	const response = await databaseClient.execute('SELECT * FROM documents');
 
-    return response.rows
+	return z.array(documentValidator).parse(response.rows);
 }
 
+/**
+ * @description retrieve existing document from database by id
+ * @param {string} id*/
 export async function getDocument(id) {
-    const response = await databaseClient.execute({
-        sql: 'SELECT * FROM documents WHERE id = ?;',
-        args: [id]
-    })
-    const [document] = response.rows
+	const response = await databaseClient.execute({
+		sql: 'SELECT * FROM documents WHERE id = ?;',
+		args: [id]
+	});
+	const [document] = response.rows;
 
-    return document ?? null
+	return document ? documentValidator.parse(document) : null;
 }

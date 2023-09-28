@@ -2,10 +2,13 @@
 	import { enhance } from '$app/forms';
 	import { uploadToS3 } from '$lib/upload-to-s3.js';
 	import { saveUploadedDocuments } from '$lib/api.js';
+	/**@type {import('./$types').PageData}*/
 	export let data;
 
-    let form;
+	/**@type {HTMLFormElement}*/
+	let form;
 
+	/**@type {import('./$types').SubmitFunction}*/
 	function handleSubmit({ formData }) {
 		const files = [...formData.getAll('files')];
 		formData.delete('files');
@@ -34,16 +37,14 @@
 
 	function downloadDocument(id) {
 		return async () => {
-			console.log(id)
 			const response = await fetch(`/?id=${id}`);
 			const data = await response.json();
-			console.log(data)
 			const link = document.createElement('a');
 			link.href = data.signedUrl;
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
-		}
+		};
 	}
 </script>
 

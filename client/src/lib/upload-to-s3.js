@@ -1,3 +1,9 @@
+/**
+ * @description upload file by sending a post request to aws s3 signed url
+ * @param {File} file
+ * @param {string} url
+ * @param {Record<string, string>} fields
+ * */
 export function uploadToS3(file, url, fields) {
     const formData = new FormData();
 
