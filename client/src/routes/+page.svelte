@@ -5,6 +5,7 @@
 	import { invalidate } from '$app/navigation';
 	import FileUpload from '$lib/components/file-upload.component.svelte';
 	import Modal from '$lib/components/modal.component.svelte';
+	import { format } from 'date-fns';
 
 	/**@type {import('./$types').PageData}*/
 	export let data;
@@ -45,9 +46,13 @@
 		};
 	}
 
-	function downloadDocument(id) {
+	function downloadDocument(id, version) {
 		return async () => {
-			const response = await fetch(`/?id=${id}`);
+			const query = new URLSearchParams({ id });
+			if (version) {
+				query.set('version', version);
+			}
+			const response = await fetch(`/?${query}`);
 			const data = await response.json();
 			const link = document.createElement('a');
 			link.href = data.signedUrl;
@@ -115,6 +120,14 @@
 </div>
 
 <Modal bind:showModal={activeDocument}>
+	{#each versions as version}
+		<div>
+			<p on:click={downloadDocument(activeDocument.id, version.versionId)}>
+				{format(new Date(version.lastModified), 'MMM do, yyyy')}
+			</p>
+		</div>
+	{/each}
+	<hr />
 	<form action="?/update" use:enhance={handleUpdate} method="POST">
 		<input name="key" value={activeDocument?.key} class="hidden" />
 		<input name="name" value={activeDocument?.name} />

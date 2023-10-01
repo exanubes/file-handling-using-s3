@@ -30,13 +30,14 @@ export async function POST({ request }) {
 /**@type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
 	const id = url.searchParams.get('id');
-
+	const version = url.searchParams.get('version');
 	const document = await getDocument(id);
 
 	if (document) {
 		const response = await createDownloadUrl({
 			key: document.key,
-			bucket: BUCKET_NAME
+			bucket: BUCKET_NAME,
+			version
 		});
 		return json({ signedUrl: response }, { status: 200 });
 	}

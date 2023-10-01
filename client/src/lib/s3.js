@@ -1,8 +1,8 @@
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
-import {GetObjectCommand, ListObjectVersionsCommand, S3Client} from '@aws-sdk/client-s3';
+import { GetObjectCommand, ListObjectVersionsCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import {versionResponseValidator} from "$lib/validators.js";
-import {z} from "zod";
+import { versionResponseValidator } from '$lib/validators.js';
+import { z } from 'zod';
 
 const client = new S3Client();
 
@@ -38,7 +38,8 @@ export async function createDownloadUrl(props) {
 	/**@type {import('@aws-sdk/client-s3').GetObjectCommandInput}*/
 	const input = {
 		Bucket: props.bucket,
-		Key: props.key
+		Key: props.key,
+		VersionId: props.version
 	};
 
 	const command = new GetObjectCommand(input);
@@ -47,15 +48,14 @@ export async function createDownloadUrl(props) {
 }
 
 export async function getVersionsList(props) {
-    const input = {
-        Bucket: props.bucket,
-        Prefix: props.key
-    }
+	const input = {
+		Bucket: props.bucket,
+		Prefix: props.key
+	};
 
-    const command = new ListObjectVersionsCommand(input);
+	const command = new ListObjectVersionsCommand(input);
 
-    const response = await client.send(command);
+	const response = await client.send(command);
 
-
-    return z.array(versionResponseValidator).parse(response.Versions)
+	return z.array(versionResponseValidator).parse(response.Versions);
 }
