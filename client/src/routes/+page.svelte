@@ -73,6 +73,15 @@
 			}
 		};
 	}
+
+	let versions = [];
+	$: {
+		if (activeDocument) {
+			fetch(`/documents/${activeDocument.id}`)
+				.then((res) => res.json())
+				.then((res) => (versions = res.versions));
+		}
+	}
 </script>
 
 <form action="?/upload" method="POST" use:enhance={handleSubmit} bind:this={form}>
