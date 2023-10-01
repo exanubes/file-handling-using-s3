@@ -37,3 +37,10 @@ export async function getDocument(id) {
 
 	return document ? documentValidator.parse(document) : null;
 }
+
+export async function updateDocument(props) {
+	await databaseClient.execute({
+		sql: 'UPDATE documents SET name = ? WHERE id = ?',
+		args: [props.name, props.id]
+	});
+}

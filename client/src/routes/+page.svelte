@@ -1,9 +1,10 @@
 <script>
 	import { enhance } from '$app/forms';
 	import { uploadToS3 } from '$lib/upload-to-s3.js';
-	import { saveUploadedDocuments } from '$lib/api.js';
-	import FileUpload from '$lib/components/file-upload.component.svelte';
+	import { confirmNewVersion, saveUploadedDocuments } from '$lib/api.js';
 	import { invalidate } from '$app/navigation';
+	import FileUpload from '$lib/components/file-upload.component.svelte';
+	import Modal from '$lib/components/modal.component.svelte';
 
 	/**@type {import('./$types').PageData}*/
 	export let data;
@@ -55,6 +56,23 @@
 			document.body.removeChild(link);
 		};
 	}
+	let activeDocument;
+	function handleUpdate({ formData }) {
+		const file = formData.get('file');
+		formData.delete('file');
+		const formName = formData.get('name');
+		return async ({ update, result }) => {
+			update();
+			if (result.type === 'success' && result.data.presignedUrl) {
+				await uploadToS3(file, result.data.presignedUrl.url, result.data.presignedUrl.fields);
+				if (formName !== activeDocument.name) {
+					await confirmNewVersion(activeDocument.id, { name: formName });
+					await invalidate('/');
+				}
+				activeDocument = null;
+			}
+		};
+	}
 </script>
 
 <form action="?/upload" method="POST" use:enhance={handleSubmit} bind:this={form}>
@@ -71,12 +89,27 @@
 			<p class="truncate font-medium">{document.name}</p>
 			<div class="flex gap-4">
 				<button
-					class="text-green-600 hover:text-green-600"
+					class="text-green-500 hover:text-green-600"
 					on:click={downloadDocument(document.id)}
 				>
 					download
+				</button>
+				<button
+					class="text-blue-500 hover:text-blue-600"
+					on:click={() => (activeDocument = document)}
+				>
+					edit
 				</button>
 			</div>
 		</div>
 	{/each}
 </div>
+
+<Modal bind:showModal={activeDocument}>
+	<form action="?/update" use:enhance={handleUpdate} method="POST">
+		<input name="key" value={activeDocument?.key} class="hidden" />
+		<input name="name" value={activeDocument?.name} />
+		<input type="file" name="file" multiple />
+		<button type="submit"> Upload </button>
+	</form>
+</Modal>

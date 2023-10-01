@@ -11,3 +11,13 @@ export function saveUploadedDocuments(body) {
 		body: JSON.stringify(body)
 	});
 }
+
+export function confirmNewVersion(id, body) {
+	return fetch(`/documents/${id}`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
+}

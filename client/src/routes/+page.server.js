@@ -27,5 +27,26 @@ export const actions = {
 		return {
 			presignedUrls: results
 		};
+	},
+
+	async update({ request }) {
+		const data = await request.formData();
+		const name = data.get('name');
+		const key = data.get('key');
+		if (!key || !name) {
+			return {
+				error: 'name and key cannot be null',
+				presignedUrl: null
+			};
+		}
+		const result = await createPostUrl({
+			bucket: BUCKET_NAME,
+			fileName: name,
+			key
+		});
+
+		return {
+			presignedUrl: result
+		};
 	}
 };
