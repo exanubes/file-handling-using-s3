@@ -15,6 +15,7 @@ async function main() {
   new Bucket(stack, 'uploads', {
     bucketName: BUCKET_NAME,
     blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+    versioned: true,
     cors: [{
       allowedMethods: [HttpMethods.POST],
       allowedOrigins: ['http://localhost:5173'],

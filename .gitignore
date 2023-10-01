@@ -27,3 +27,4 @@ infrastructure/node_modules
 ## CDK asset staging directory
 infrastructure/.cdk.staging
 infrastructure/cdk.out
+.DS_Store
