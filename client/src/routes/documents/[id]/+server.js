@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { getDocument, updateDocument } from '$lib/documents.js';
-import { getVersionsList } from '$lib/s3.js';
+import { getDocument, removeDocument, updateDocument } from '$lib/documents.js';
+import { getVersionsList, removeObject } from '$lib/s3.js';
 import { BUCKET_NAME } from '$env/static/private';
 
 export async function POST({ request, params }) {
@@ -39,4 +39,21 @@ export async function GET({ params }) {
 		},
 		{ status: 404 }
 	);
+}
+
+export async function DELETE({ params }) {
+	const { id } = params;
+
+	const document = await getDocument(id);
+
+	if (document) {
+		const response = await removeObject({
+			bucket: BUCKET_NAME,
+			key: document.key
+		});
+		await removeDocument(document.id);
+		return json({ response }, { status: 200 });
+	}
+
+	return json({ message: 'Not Found.', response: null }, { status: 404 });
 }

@@ -1,5 +1,10 @@
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
-import { GetObjectCommand, ListObjectVersionsCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+	DeleteObjectCommand,
+	GetObjectCommand,
+	ListObjectVersionsCommand,
+	S3Client
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { versionResponseValidator } from '$lib/validators.js';
 import { z } from 'zod';
@@ -57,5 +62,24 @@ export async function getVersionsList(props) {
 
 	const response = await client.send(command);
 
-	return z.array(versionResponseValidator).parse(response.Versions);
+	const deleteMarkers = response.DeleteMarkers?.map((marker) => ({
+		...marker,
+		deleted: true
+	}));
+
+	return z
+		.array(versionResponseValidator)
+		.parse(response.Versions?.concat(deleteMarkers ?? []))
+		.sort((a, b) => +b.lastModified - +a.lastModified);
+}
+
+export async function removeObject(props) {
+	const input = {
+		Bucket: props.bucket,
+		Key: props.key
+	};
+
+	const command = new DeleteObjectCommand(input);
+
+	return client.send(command);
 }

@@ -70,7 +70,7 @@
 			update();
 			if (result.type === 'success' && result.data.presignedUrl) {
 				await uploadToS3(file, result.data.presignedUrl.url, result.data.presignedUrl.fields);
-				if (formName !== activeDocument.name) {
+				if (formName !== activeDocument.name || activeDocument.deleted) {
 					await confirmNewVersion(activeDocument.id, { name: formName });
 					await invalidate('/');
 				}
@@ -86,6 +86,16 @@
 				.then((res) => res.json())
 				.then((res) => (versions = res.versions));
 		}
+	}
+
+	function removeDocument(id) {
+		return async () => {
+			await fetch(`documents/${id}`, {
+				method: 'DELETE'
+			});
+
+			await invalidate('/');
+		};
 	}
 </script>
 
@@ -103,7 +113,8 @@
 			<p class="truncate font-medium">{document.name}</p>
 			<div class="flex gap-4">
 				<button
-					class="text-green-500 hover:text-green-600"
+					disabled={document.deleted}
+					class="text-green-500 hover:text-green-600 disabled:cursor-not-allowed disabled:text-gray-400"
 					on:click={downloadDocument(document.id)}
 				>
 					download
@@ -113,6 +124,13 @@
 					on:click={() => (activeDocument = document)}
 				>
 					edit
+				</button>
+				<button
+					disabled={document.deleted}
+					class="text-red-500 hover:text-red-600 disabled:cursor-not-allowed disabled:text-gray-400"
+					on:click={removeDocument(document.id)}
+				>
+					remove
 				</button>
 			</div>
 		</div>

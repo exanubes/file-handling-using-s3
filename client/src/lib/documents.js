@@ -40,7 +40,14 @@ export async function getDocument(id) {
 
 export async function updateDocument(props) {
 	await databaseClient.execute({
-		sql: 'UPDATE documents SET name = ? WHERE id = ?',
+		sql: 'UPDATE documents SET name = ?, deleted = false WHERE id = ?',
 		args: [props.name, props.id]
 	});
+}
+
+export async function removeDocument(id) {
+	await databaseClient.execute({
+		sql: `UPDATE documents SET deleted = true WHERE id = ?`,
+		args: [id]
+	})
 }
