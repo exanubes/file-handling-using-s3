@@ -1,0 +1,1088 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "exanubes-file-storage-with-s3-StorageStack": {
+        "id": "exanubes-file-storage-with-s3-StorageStack",
+        "path": "exanubes-file-storage-with-s3-StorageStack",
+        "children": {
+          "CustomResourceHandler": {
+            "id": "CustomResourceHandler",
+            "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "file-storage-with-s3"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "exanubes"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.95.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.95.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "exanubes-file-storage-with-s3-StorageStack/CustomResourceHandler/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-145719986153-eu-central-1",
+                      "s3Key": "b08b8e345fda7bcc15ec1116d6767a729923cf7aa364bbdd2855c028992d9718.zip"
+                    },
+                    "handler": "index.handler",
+                    "memorySize": 1024,
+                    "role": {
+                      "Fn::GetAtt": [
+                        "CustomResourceHandlerServiceRole41AEC181",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs16.x",
+                    "tags": [
+                      {
+                        "key": "sst:app",
+                        "value": "file-storage-with-s3"
+                      },
+                      {
+                        "key": "sst:stage",
+                        "value": "exanubes"
+                      }
+                    ],
+                    "timeout": 900
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.95.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.95.1"
+            }
+          },
+          "uploads": {
+            "id": "uploads",
+            "path": "exanubes-file-storage-with-s3-StorageStack/uploads",
+            "children": {
+              "Bucket": {
+                "id": "Bucket",
+                "path": "exanubes-file-storage-with-s3-StorageStack/uploads/Bucket",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "exanubes-file-storage-with-s3-StorageStack/uploads/Bucket/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                      "aws:cdk:cloudformation:props": {
+                        "bucketName": "exanubes-upload-bucket-sst",
+                        "corsConfiguration": {
+                          "corsRules": [
+                            {
+                              "allowedHeaders": [
+                                "*"
+                              ],
+                              "allowedMethods": [
+                                "POST"
+                              ],
+                              "allowedOrigins": [
+                                "http://localhost:5173"
+                              ]
+                            }
+                          ]
+                        },
+                        "ownershipControls": {
+                          "rules": [
+                            {
+                              "objectOwnership": "BucketOwnerPreferred"
+                            }
+                          ]
+                        },
+                        "publicAccessBlockConfiguration": {
+                          "blockPublicAcls": true,
+                          "blockPublicPolicy": true,
+                          "ignorePublicAcls": true,
+                          "restrictPublicBuckets": true
+                        },
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "file-storage-with-s3"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "exanubes"
+                          }
+                        ],
+                        "versioningConfiguration": {
+                          "status": "Enabled"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "Policy": {
+                    "id": "Policy",
+                    "path": "exanubes-file-storage-with-s3-StorageStack/uploads/Bucket/Policy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "exanubes-file-storage-with-s3-StorageStack/uploads/Bucket/Policy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                          "aws:cdk:cloudformation:props": {
+                            "bucket": {
+                              "Ref": "uploadsBucket10132EB4"
+                            },
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "s3:*",
+                                  "Condition": {
+                                    "Bool": {
+                                      "aws:SecureTransport": "false"
+                                    }
+                                  },
+                                  "Effect": "Deny",
+                                  "Principal": {
+                                    "AWS": "*"
+                                  },
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "uploadsBucket10132EB4",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "uploadsBucket10132EB4",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                          "version": "2.95.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.Bucket",
+                  "version": "2.95.1"
+                }
+              },
+              "Parameter_bucketName": {
+                "id": "Parameter_bucketName",
+                "path": "exanubes-file-storage-with-s3-StorageStack/uploads/Parameter_bucketName",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "exanubes-file-storage-with-s3-StorageStack/uploads/Parameter_bucketName/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                      "aws:cdk:cloudformation:props": {
+                        "name": "/sst/file-storage-with-s3/exanubes/Bucket/uploads/bucketName",
+                        "tags": {
+                          "sst:app": "file-storage-with-s3",
+                          "sst:stage": "exanubes"
+                        },
+                        "type": "String",
+                        "value": {
+                          "Ref": "uploadsBucket10132EB4"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
+                  "version": "2.95.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.2.69"
+            }
+          },
+          "SSTStackOutputSSTMetadata": {
+            "id": "SSTStackOutputSSTMetadata",
+            "path": "exanubes-file-storage-with-s3-StorageStack/SSTStackOutputSSTMetadata",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.95.1"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "exanubes-file-storage-with-s3-StorageStack/Exports",
+            "children": {
+              "Output{\"Fn::GetAtt\":[\"uploadsBucket10132EB4\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"uploadsBucket10132EB4\",\"Arn\"]}",
+                "path": "exanubes-file-storage-with-s3-StorageStack/Exports/Output{\"Fn::GetAtt\":[\"uploadsBucket10132EB4\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.95.1"
+                }
+              },
+              "Output{\"Ref\":\"uploadsBucket10132EB4\"}": {
+                "id": "Output{\"Ref\":\"uploadsBucket10132EB4\"}",
+                "path": "exanubes-file-storage-with-s3-StorageStack/Exports/Output{\"Ref\":\"uploadsBucket10132EB4\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.95.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.2.69"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "exanubes-file-storage-with-s3-StorageStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.95.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "exanubes-file-storage-with-s3-StorageStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.95.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.95.1"
+        }
+      },
+      "exanubes-file-storage-with-s3-SiteStack": {
+        "id": "exanubes-file-storage-with-s3-SiteStack",
+        "path": "exanubes-file-storage-with-s3-SiteStack",
+        "children": {
+          "CustomResourceHandler": {
+            "id": "CustomResourceHandler",
+            "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "file-storage-with-s3"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "exanubes"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.95.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.95.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "exanubes-file-storage-with-s3-SiteStack/CustomResourceHandler/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-145719986153-eu-central-1",
+                      "s3Key": "a5f6cf511641d8d65c95f6ff1efa95298ab7096a50a970cd50257f6edec4de80.zip"
+                    },
+                    "handler": "index.handler",
+                    "memorySize": 1024,
+                    "role": {
+                      "Fn::GetAtt": [
+                        "CustomResourceHandlerServiceRole41AEC181",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs16.x",
+                    "tags": [
+                      {
+                        "key": "sst:app",
+                        "value": "file-storage-with-s3"
+                      },
+                      {
+                        "key": "sst:stage",
+                        "value": "exanubes"
+                      }
+                    ],
+                    "timeout": 900
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.95.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.95.1"
+            }
+          },
+          "site": {
+            "id": "site",
+            "path": "exanubes-file-storage-with-s3-SiteStack/site",
+            "children": {
+              "ServerFunctionRole": {
+                "id": "ServerFunctionRole",
+                "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunctionRole",
+                "children": {
+                  "ImportServerFunctionRole": {
+                    "id": "ImportServerFunctionRole",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunctionRole/ImportServerFunctionRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunctionRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:",
+                                      {
+                                        "Ref": "AWS::Partition"
+                                      },
+                                      ":iam::145719986153:root"
+                                    ]
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "maxSessionDuration": 43200,
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "file-storage-with-s3"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "exanubes"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunctionRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunctionRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "s3:*",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::ImportValue": "exanubes-file-storage-with-s3-StorageStack:ExportsOutputFnGetAttuploadsBucket10132EB4Arn7AA17686"
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::ImportValue": "exanubes-file-storage-with-s3-StorageStack:ExportsOutputFnGetAttuploadsBucket10132EB4Arn7AA17686"
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "siteServerFunctionRoleDefaultPolicy213DB8A5",
+                            "roles": [
+                              {
+                                "Ref": "siteServerFunctionRole1F8F4FAC"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.95.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.95.1"
+                }
+              },
+              "ServerFunction": {
+                "id": "ServerFunction",
+                "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction",
+                "children": {
+                  "AssetReplacerPolicy": {
+                    "id": "AssetReplacerPolicy",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/AssetReplacerPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/AssetReplacerPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:GetObject",
+                                    "s3:PutObject"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":s3:::placeholder/*"
+                                      ]
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "siteServerFunctionAssetReplacerPolicy304BF125",
+                            "roles": [
+                              {
+                                "Ref": "CustomResourceHandlerServiceRole41AEC181"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.95.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "AssetReplacer": {
+                    "id": "AssetReplacer",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/AssetReplacer",
+                    "children": {
+                      "Default": {
+                        "id": "Default",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/AssetReplacer/Default",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.CfnResource",
+                          "version": "2.95.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CustomResource",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "IServerFunctionBucket": {
+                    "id": "IServerFunctionBucket",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/IServerFunctionBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "ServerFunction": {
+                    "id": "ServerFunction",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                          "aws:cdk:cloudformation:props": {
+                            "architectures": [
+                              "arm64"
+                            ],
+                            "code": {
+                              "s3Bucket": "cdk-hnb659fds-assets-145719986153-eu-central-1",
+                              "s3Key": "4566ed91c184864577d2b2e055f5135b4dae4750c77f7090fcad8dc45bdab80f.zip"
+                            },
+                            "description": "Server handler placeholder",
+                            "environment": {
+                              "variables": {
+                                "SST_APP": "file-storage-with-s3",
+                                "SST_STAGE": "exanubes",
+                                "SST_SSM_PREFIX": "/sst/file-storage-with-s3/exanubes/",
+                                "SST_Bucket_bucketName_uploads": {
+                                  "Fn::ImportValue": "exanubes-file-storage-with-s3-StorageStack:ExportsOutputRefuploadsBucket10132EB4280997AA"
+                                }
+                              }
+                            },
+                            "handler": "index.handler",
+                            "memorySize": 1024,
+                            "role": {
+                              "Fn::GetAtt": [
+                                "siteServerFunctionRole1F8F4FAC",
+                                "Arn"
+                              ]
+                            },
+                            "runtime": "nodejs18.x",
+                            "tags": [
+                              {
+                                "key": "sst:app",
+                                "value": "file-storage-with-s3"
+                              },
+                              {
+                                "key": "sst:stage",
+                                "value": "exanubes"
+                              }
+                            ],
+                            "timeout": 10
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                          "version": "2.95.1"
+                        }
+                      },
+                      "LogRetention": {
+                        "id": "LogRetention",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction/LogRetention",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction/LogRetention/Resource",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.CfnResource",
+                              "version": "2.95.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_logs.LogRetention",
+                          "version": "2.95.1"
+                        }
+                      },
+                      "LogGroup": {
+                        "id": "LogGroup",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction/LogGroup",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.95.1"
+                        }
+                      },
+                      "Code": {
+                        "id": "Code",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction/Code",
+                        "children": {
+                          "Stage": {
+                            "id": "Stage",
+                            "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction/Code/Stage",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.AssetStaging",
+                              "version": "2.95.1"
+                            }
+                          },
+                          "AssetBucket": {
+                            "id": "AssetBucket",
+                            "path": "exanubes-file-storage-with-s3-SiteStack/site/ServerFunction/ServerFunction/Code/AssetBucket",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                              "version": "2.95.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                          "version": "2.95.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.Function",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.2.69"
+                }
+              },
+              "Parameter_url": {
+                "id": "Parameter_url",
+                "path": "exanubes-file-storage-with-s3-SiteStack/site/Parameter_url",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/site/Parameter_url/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
+                      "aws:cdk:cloudformation:props": {
+                        "name": "/sst/file-storage-with-s3/exanubes/SvelteKitSite/site/url",
+                        "tags": {
+                          "sst:app": "file-storage-with-s3",
+                          "sst:stage": "exanubes"
+                        },
+                        "type": "String",
+                        "value": "localhost"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
+                  "version": "2.95.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.2.69"
+            }
+          },
+          "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a": {
+            "id": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a",
+            "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a",
+            "children": {
+              "Code": {
+                "id": "Code",
+                "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.95.1"
+                }
+              },
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "sst:app",
+                            "value": "file-storage-with-s3"
+                          },
+                          {
+                            "key": "sst:stage",
+                            "value": "exanubes"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.95.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:PutRetentionPolicy",
+                                    "logs:DeleteRetentionPolicy"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+                            "roles": [
+                              {
+                                "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.95.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.95.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.95.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "exanubes-file-storage-with-s3-SiteStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.95.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.2.69"
+            }
+          },
+          "SSTStackOutputSSTMetadata": {
+            "id": "SSTStackOutputSSTMetadata",
+            "path": "exanubes-file-storage-with-s3-SiteStack/SSTStackOutputSSTMetadata",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.95.1"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "exanubes-file-storage-with-s3-SiteStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.95.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "exanubes-file-storage-with-s3-SiteStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.95.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.95.1"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.2.69"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.95.1"
+    }
+  }
+}

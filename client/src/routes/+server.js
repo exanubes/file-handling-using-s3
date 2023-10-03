@@ -1,6 +1,6 @@
 import { createDocument, getDocument } from '$lib/documents.js';
 import { json } from '@sveltejs/kit';
-import { BUCKET_NAME } from '$env/static/private';
+import { Bucket } from 'sst/node/bucket';
 import { createDownloadUrl } from '$lib/s3.js';
 
 /**@type {import('./$types').RequestHandler} */
@@ -36,7 +36,7 @@ export async function GET({ url }) {
 	if (document) {
 		const response = await createDownloadUrl({
 			key: document.key,
-			bucket: BUCKET_NAME,
+			bucket: Bucket.uploads.bucketName,
 			version
 		});
 		return json({ signedUrl: response }, { status: 200 });

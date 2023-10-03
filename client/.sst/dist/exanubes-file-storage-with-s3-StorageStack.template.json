@@ -1,0 +1,256 @@
+{
+ "Resources": {
+  "CustomResourceHandlerServiceRole41AEC181": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "sst:app",
+      "Value": "file-storage-with-s3"
+     },
+     {
+      "Key": "sst:stage",
+      "Value": "exanubes"
+     }
+    ]
+   }
+  },
+  "CustomResourceHandlerE8FB56BA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-145719986153-eu-central-1",
+     "S3Key": "b08b8e345fda7bcc15ec1116d6767a729923cf7aa364bbdd2855c028992d9718.zip"
+    },
+    "Handler": "index.handler",
+    "MemorySize": 1024,
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomResourceHandlerServiceRole41AEC181",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs16.x",
+    "Tags": [
+     {
+      "Key": "sst:app",
+      "Value": "file-storage-with-s3"
+     },
+     {
+      "Key": "sst:stage",
+      "Value": "exanubes"
+     }
+    ],
+    "Timeout": 900
+   },
+   "DependsOn": [
+    "CustomResourceHandlerServiceRole41AEC181"
+   ]
+  },
+  "uploadsBucket10132EB4": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "exanubes-upload-bucket-sst",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "POST"
+       ],
+       "AllowedOrigins": [
+        "http://localhost:5173"
+       ]
+      }
+     ]
+    },
+    "OwnershipControls": {
+     "Rules": [
+      {
+       "ObjectOwnership": "BucketOwnerPreferred"
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "sst:app",
+      "Value": "file-storage-with-s3"
+     },
+     {
+      "Key": "sst:stage",
+      "Value": "exanubes"
+     }
+    ],
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain"
+  },
+  "uploadsBucketPolicy32C2DD76": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "uploadsBucket10132EB4"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "s3:*",
+       "Condition": {
+        "Bool": {
+         "aws:SecureTransport": "false"
+        }
+       },
+       "Effect": "Deny",
+       "Principal": {
+        "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "uploadsBucket10132EB4",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "uploadsBucket10132EB4",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   }
+  },
+  "uploadsParameterbucketName697C53B5": {
+   "Type": "AWS::SSM::Parameter",
+   "Properties": {
+    "Name": "/sst/file-storage-with-s3/exanubes/Bucket/uploads/bucketName",
+    "Tags": {
+     "sst:app": "file-storage-with-s3",
+     "sst:stage": "exanubes"
+    },
+    "Type": "String",
+    "Value": {
+     "Ref": "uploadsBucket10132EB4"
+    }
+   }
+  }
+ },
+ "Outputs": {
+  "SSTMetadata": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "{\"app\":\"file-storage-with-s3\",\"stage\":\"exanubes\",\"version\":\"2.26.10\",\"metadata\":[{\"id\":\"uploads\",\"addr\":\"c8b054a614dc270514c454f321a7422a90bf34d2ab\",\"stack\":\"exanubes-file-storage-with-s3-StorageStack\",\"type\":\"Bucket\",\"data\":{\"name\":\"",
+      {
+       "Ref": "uploadsBucket10132EB4"
+      },
+      "\",\"notifications\":[],\"notificationNames\":[]}}]}"
+     ]
+    ]
+   }
+  },
+  "ExportsOutputFnGetAttuploadsBucket10132EB4Arn7AA17686": {
+   "Value": {
+    "Fn::GetAtt": [
+     "uploadsBucket10132EB4",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "exanubes-file-storage-with-s3-StorageStack:ExportsOutputFnGetAttuploadsBucket10132EB4Arn7AA17686"
+   }
+  },
+  "ExportsOutputRefuploadsBucket10132EB4280997AA": {
+   "Value": {
+    "Ref": "uploadsBucket10132EB4"
+   },
+   "Export": {
+    "Name": "exanubes-file-storage-with-s3-StorageStack:ExportsOutputRefuploadsBucket10132EB4280997AA"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

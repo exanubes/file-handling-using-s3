@@ -1,5 +1,5 @@
 import { createPostUrl } from '$lib/s3.js';
-import { BUCKET_NAME } from '$env/static/private';
+import { Bucket } from 'sst/node/bucket';
 import { listDocuments } from '$lib/documents.js';
 
 /**@type {import('./$types').PageServerLoad}*/
@@ -17,7 +17,7 @@ export const actions = {
 		const results = await Promise.all(
 			fileNames.map((file) =>
 				createPostUrl({
-					bucket: BUCKET_NAME,
+					bucket: Bucket.uploads.bucketName,
 					key: crypto.randomUUID(),
 					fileName: file
 				})
@@ -40,7 +40,7 @@ export const actions = {
 			};
 		}
 		const result = await createPostUrl({
-			bucket: BUCKET_NAME,
+			bucket: Bucket.uploads.bucketName,
 			fileName: name,
 			key
 		});
