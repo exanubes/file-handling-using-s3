@@ -3,7 +3,7 @@
 		"src/routes/+page.server.js",
 		"src/routes/+server.js"
 	],
-	"/versions": [
-		"src/routes/versions/+server.js"
+	"/documents/[id]": [
+		"src/routes/documents/[id]/+server.js"
 	]
 }

@@ -1,29 +1,25 @@
 // @ts-nocheck
 import { createPostUrl } from '$lib/s3.js';
-import { v4 } from 'uuid';
-import { listDocuments } from '$lib/documents.js';
 import { Bucket } from 'sst/node/bucket';
+import { listDocuments } from '$lib/documents.js';
 
 /***/
 export async function load() {
 	const documents = await listDocuments();
-
-	return {
-		documents
-	};
+	return { documents };
 }
 
 /** */
 export const actions = {
 	async upload({ request }) {
 		const data = await request.formData();
-		const files = data.getAll('files');
-		/**@type {import('@aws-sdk/s3-presigned-post').PresignedPost[]}*/
+		const fileNames = data.getAll('files');
+
 		const results = await Promise.all(
-			files.map((file) =>
+			fileNames.map((file) =>
 				createPostUrl({
-					bucket: Bucket.UploadedFiles.bucketName,
-					key: v4(),
+					bucket: Bucket.uploads.bucketName,
+					key: crypto.randomUUID(),
 					fileName: file
 				})
 			)
@@ -36,19 +32,18 @@ export const actions = {
 
 	async update({ request }) {
 		const data = await request.formData();
-		const key = data.get('key');
 		const name = data.get('name');
-		if (!key) {
+		const key = data.get('key');
+		if (!key || !name) {
 			return {
-				error: 'key cannot be null',
+				error: 'name and key cannot be null',
 				presignedUrl: null
 			};
 		}
-
 		const result = await createPostUrl({
-			bucket: Bucket.UploadedFiles.bucketName,
-			key,
-			fileName: name
+			bucket: Bucket.uploads.bucketName,
+			fileName: name,
+			key
 		});
 
 		return {
