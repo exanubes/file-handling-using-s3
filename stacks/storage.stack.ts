@@ -1,5 +1,6 @@
 import { Bucket, StackContext } from 'sst/constructs';
-import { BlockPublicAccess, HttpMethods } from 'aws-cdk-lib/aws-s3';
+import {BlockPublicAccess, HttpMethods, StorageClass} from 'aws-cdk-lib/aws-s3';
+import {Duration} from "aws-cdk-lib";
 
 export function StorageStack({ stack }: StackContext) {
 	const bucket = new Bucket(stack, 'uploads', {
@@ -14,7 +15,24 @@ export function StorageStack({ stack }: StackContext) {
 		cdk: {
 			bucket: {
 				blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-				versioned: true
+				versioned: true,
+				lifecycleRules: [
+					{
+						enabled: true,
+						noncurrentVersionTransitions: [
+							{
+								transitionAfter: Duration.days(1),
+								storageClass: StorageClass.GLACIER
+							}
+						],
+						transitions: [
+							{
+								transitionAfter: Duration.days(30),
+								storageClass: StorageClass.GLACIER
+							}
+						]
+					}
+				]
 			}
 		}
 	});
