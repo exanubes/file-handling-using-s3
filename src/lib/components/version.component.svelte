@@ -15,6 +15,7 @@
         deleted: boolean;
         restoredUntil: string | null;
         restoredStatus: 'completed' | 'pending' | null;
+        isArchived: boolean;
      }}
      */
 	export let version;
@@ -35,7 +36,7 @@
 		tabindex="0"
 		role="button"
 		style={{ all: 'unset' }}
-		on:click={version.deleted ? undefined : onDownload}
+		on:click={version.deleted || version.isArchived ? undefined : onDownload}
 		on:keydown={handleKeyDown}
 	>
 		<p
@@ -51,6 +52,10 @@
 	<div class="flex grow items-center justify-between">
 		{#if version.deleted}
 			<small class="italic text-red-400">deleted</small>
+		{/if}
+		{#if version.isArchived}
+			<small class="italic text-gray-300">archived</small>
+			<button>restore</button>
 		{/if}
 	</div>
 </div>

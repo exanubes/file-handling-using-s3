@@ -17,6 +17,7 @@ export const versionResponseValidator = z
 		LastModified: z.date(),
 		VersionId: z.string(),
 		IsLatest: z.boolean(),
+		StorageClass: z.string().optional(),
 		deleted: z.boolean().optional()
 	})
 	.transform((arg, ctx) => ({
@@ -24,5 +25,6 @@ export const versionResponseValidator = z
 		lastModified: arg.LastModified,
 		versionId: arg.VersionId,
 		isLatest: arg.IsLatest,
+		isArchived: arg.StorageClass === 'GLACIER',
 		deleted: Boolean(arg.deleted)
 	}));
