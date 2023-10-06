@@ -1,5 +1,10 @@
 import { json } from '@sveltejs/kit';
-import { getDocument, removeDocument, updateDocument } from '$lib/documents.js';
+import {
+	getDocument,
+	getRestoredDocuments,
+	removeDocument,
+	updateDocument
+} from '$lib/documents.js';
 import { getVersionsList, removeObject } from '$lib/s3.js';
 import { Bucket } from 'sst/node/bucket';
 
@@ -29,7 +34,21 @@ export async function GET({ params }) {
 			bucket: Bucket.uploads.bucketName
 		});
 
-		return json({ versions: response }, { status: 200 });
+		const restoredDocuments = await getRestoredDocuments(document.key);
+
+		const data = response.map((version) => {
+			const restoredData = restoredDocuments.find(
+				(restoredDocument) => restoredDocument.version === version.versionId
+			);
+
+			return {
+				...version,
+				restoredUntil: restoredData?.validUntil ?? null,
+				restoredStatus: restoredData?.status ?? null
+			};
+		});
+
+		return json({ versions: data }, { status: 200 });
 	}
 
 	return json(

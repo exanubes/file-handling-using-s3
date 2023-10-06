@@ -29,6 +29,18 @@
 			void onDownload();
 		}
 	}
+
+	function handleRestore(versionId) {
+		return async () => {
+			await fetch(`/documents/${documentId}/restore`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ versionId })
+			});
+		};
+	}
 </script>
 
 <div class="flex w-full gap-2 rounded-sm pl-4 hover:bg-blue-50">
@@ -55,7 +67,7 @@
 		{/if}
 		{#if version.isArchived}
 			<small class="italic text-gray-300">archived</small>
-			<button>restore</button>
+			<button on:click={handleRestore(version.versionId)}>restore</button>
 		{/if}
 	</div>
 </div>
