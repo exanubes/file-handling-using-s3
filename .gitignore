@@ -3,3 +3,4 @@ node_modules/
 .sst/
 .svelte-kit/
 .idea/
+packages/react-email-starter/.react-email/
