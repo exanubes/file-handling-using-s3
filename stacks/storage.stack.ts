@@ -13,6 +13,14 @@ export function StorageStack({ stack }: StackContext) {
 					architecture: 'arm_64',
 					permissions: ['ses', 's3']
 				}
+			},
+			statusUpdate: {
+				type: 'function',
+				function: {
+					functionName: 'object-restored-status-update',
+					handler: 'packages/functions/src/object-restored-status-update.handler',
+					architecture: 'arm_64'
+				}
 			}
 		}
 	});
