@@ -41,6 +41,7 @@
 			});
 		};
 	}
+	const isArchived = version.isArchived && !version.restoredUntil;
 </script>
 
 <div class="flex w-full gap-2 rounded-sm pl-4 hover:bg-blue-50">
@@ -48,8 +49,8 @@
 		tabindex="0"
 		role="button"
 		style={{ all: 'unset' }}
-		on:click={version.deleted || version.isArchived ? undefined : onDownload}
-		on:keydown={handleKeyDown}
+		on:click={isArchived ? undefined : onDownload}
+		on:keydown={isArchived ? undefined : handleKeyDown}
 	>
 		<p
 			class={clsx(
@@ -66,8 +67,14 @@
 			<small class="italic text-red-400">deleted</small>
 		{/if}
 		{#if version.isArchived}
-			<small class="italic text-gray-300">archived</small>
-			<button on:click={handleRestore(version.versionId)}>restore</button>
+			{#if version.restoredStatus === 'completed'}
+					<small>restored until {format(new Date(version.restoredUntil), 'MMM do, yyyy HH:mma')}</small>
+				{:else if version.restoredStatus === 'pending'}
+					<small class="italic text-yellow-500">restoring...</small>
+				{:else}
+					<small class="italic text-gray-300">archived</small>
+					<button on:click={handleRestore(version.versionId)}>restore</button>
+			{/if}
 		{/if}
 	</div>
 </div>
