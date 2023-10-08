@@ -2,10 +2,11 @@ import { createDocument, getDocument } from '$lib/documents.js';
 import { json } from '@sveltejs/kit';
 import { Bucket } from 'sst/node/bucket';
 import { createDownloadUrl } from '$lib/s3.js';
+import type { RequestHandler } from './$types';
 
 /**@type {import('./$types').RequestHandler} */
-export async function POST({ request }) {
-	const { files } = await request.json();
+export const POST = async function POST({ request }) {
+	const { files }: PostBody = await request.json();
 
 	const response = await Promise.all(
 		files.map(async (file) => {
@@ -25,22 +26,26 @@ export async function POST({ request }) {
 		},
 		{ status: 201 }
 	);
-}
+} satisfies RequestHandler;
 
 /**@type {import('./$types').RequestHandler} */
-export async function GET({ url }) {
+export const GET = async function GET({ url }) {
 	const id = url.searchParams.get('id');
 	const version = url.searchParams.get('version');
+
+	if (!id) return json({ signedUrl: null }, { status: 400 });
+
 	const document = await getDocument(id);
+	if (!document) return json({ signedUrl: null }, { status: 404 });
 
-	if (document) {
-		const response = await createDownloadUrl({
-			key: document.key,
-			bucket: Bucket.uploads.bucketName,
-			version
-		});
-		return json({ signedUrl: response }, { status: 200 });
-	}
+	const response = await createDownloadUrl({
+		key: document.key,
+		bucket: Bucket.uploads.bucketName,
+		version
+	});
+	return json({ signedUrl: response }, { status: 200 });
+} satisfies RequestHandler;
 
-	return json({ signedUrl: null }, { status: 404 });
+interface PostBody {
+	files: { name: string; key: string }[];
 }

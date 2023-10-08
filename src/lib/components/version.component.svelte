@@ -30,6 +30,8 @@
 		}
 	}
 
+	/**@description Request retrieving an archived document
+	 * @param {string} versionId */
 	function handleRestore(versionId) {
 		return async () => {
 			await fetch(`/documents/${documentId}/restore`, {
@@ -68,12 +70,14 @@
 		{/if}
 		{#if version.isArchived}
 			{#if version.restoredStatus === 'completed'}
-					<small>restored until {format(new Date(version.restoredUntil), 'MMM do, yyyy HH:mma')}</small>
-				{:else if version.restoredStatus === 'pending'}
-					<small class="italic text-yellow-500">restoring...</small>
-				{:else}
-					<small class="italic text-gray-300">archived</small>
-					<button on:click={handleRestore(version.versionId)}>restore</button>
+				<small
+					>restored until {format(new Date(version.restoredUntil), 'MMM do, yyyy HH:mma')}</small
+				>
+			{:else if version.restoredStatus === 'pending'}
+				<small class="italic text-yellow-500">restoring...</small>
+			{:else}
+				<small class="italic text-gray-300">archived</small>
+				<button on:click={handleRestore(version.versionId)}>restore</button>
 			{/if}
 		{/if}
 	</div>

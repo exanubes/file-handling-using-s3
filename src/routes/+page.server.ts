@@ -1,18 +1,18 @@
-import { createPostUrl } from '$lib/s3.js';
+import { createPostUrl } from '$lib/s3';
+import { listDocuments } from '$lib/documents';
 import { Bucket } from 'sst/node/bucket';
-import { listDocuments } from '$lib/documents.js';
+import type { Actions, PageServerLoad } from './$types';
+import type { Document } from '$lib/types/document.types';
 
-/**@type {import('./$types').PageServerLoad}*/
-export async function load() {
+export const load = async function load() {
 	const documents = await listDocuments();
 	return { documents };
-}
+} satisfies PageServerLoad<{ documents: Document[] }>;
 
-/** @type {import('./$types').Actions} */
-export const actions = {
+export const actions: Actions = {
 	async upload({ request }) {
 		const data = await request.formData();
-		const fileNames = data.getAll('files');
+		const fileNames = data.getAll('files') as string[];
 
 		const results = await Promise.all(
 			fileNames.map((file) =>
@@ -31,8 +31,8 @@ export const actions = {
 
 	async update({ request }) {
 		const data = await request.formData();
-		const name = data.get('name');
-		const key = data.get('key');
+		const name = data.get('name') as string;
+		const key = data.get('key') as string;
 		if (!key || !name) {
 			return {
 				error: 'name and key cannot be null',
