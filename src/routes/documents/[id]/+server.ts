@@ -7,8 +7,9 @@ import {
 } from '$lib/documents.js';
 import { getVersionsList, removeObject } from '$lib/s3.js';
 import { Bucket } from 'sst/node/bucket';
+import type { RequestHandler } from './$types';
 
-export async function POST({ request, params }) {
+export const POST = async function POST({ request, params }) {
 	const { name } = await request.json();
 	const { id } = params;
 
@@ -21,9 +22,9 @@ export async function POST({ request, params }) {
 		},
 		{ status: 200 }
 	);
-}
+} satisfies RequestHandler;
 
-export async function GET({ params }) {
+export const GET = async function GET({ params }) {
 	const { id } = params;
 
 	const document = await getDocument(id);
@@ -58,9 +59,9 @@ export async function GET({ params }) {
 		},
 		{ status: 404 }
 	);
-}
+} satisfies RequestHandler;
 
-export async function DELETE({ params }) {
+export const DELETE = async function DELETE({ params }) {
 	const { id } = params;
 
 	const document = await getDocument(id);
@@ -75,4 +76,4 @@ export async function DELETE({ params }) {
 	}
 
 	return json({ message: 'Not Found.', response: null }, { status: 404 });
-}
+} satisfies RequestHandler;

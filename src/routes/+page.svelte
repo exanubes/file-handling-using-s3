@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms';
 	import { uploadToS3 } from '$lib/upload-to-s3.js';
 	import { confirmNewVersion, saveUploadedDocuments } from '$lib/api.js';

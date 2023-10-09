@@ -2,8 +2,9 @@ import { getDocument, restoreDocument } from '$lib/documents.js';
 import { json } from '@sveltejs/kit';
 import { Bucket } from 'sst/node/bucket';
 import { restoreObject } from '$lib/s3.js';
+import type { RequestHandler } from './$types';
 
-export async function POST({ request, params }) {
+export const POST = async function POST({ request, params }) {
 	const data = await request.json();
 	const { id } = params;
 
@@ -22,4 +23,4 @@ export async function POST({ request, params }) {
 	});
 
 	return json({ message: 'accepted' }, { status: 202 });
-}
+} satisfies RequestHandler;
