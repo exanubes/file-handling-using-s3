@@ -37,6 +37,7 @@ export async function createPostUrl(props) {
  * bucket: string;
  * key: string;
  * version?: string | null;
+ * name: string;
  * }} props
  */
 export async function createDownloadUrl(props) {
@@ -44,7 +45,8 @@ export async function createDownloadUrl(props) {
 	const input = {
 		Bucket: props.bucket,
 		Key: props.key,
-		VersionId: props.version
+		VersionId: props.version ?? undefined,
+		ResponseContentDisposition: `attachment; filename=${props.name}`
 	};
 
 	const command = new GetObjectCommand(input);
@@ -52,6 +54,10 @@ export async function createDownloadUrl(props) {
 	return getSignedUrl(client, command, { expiresIn: 60 });
 }
 
+/**
+ * @description get a list of versions for s3 object key
+ * @param {{bucket: string; key: string}} props
+ * */
 export async function getVersionsList(props) {
 	const input = {
 		Bucket: props.bucket,
@@ -73,6 +79,10 @@ export async function getVersionsList(props) {
 		.sort((a, b) => +b.lastModified - +a.lastModified);
 }
 
+/**
+ * @description remove object from a bucket. Creates delete marker when versioning is enabled
+ * @param {{bucket: string; key: string;}} props
+ * */
 export async function removeObject(props) {
 	const input = {
 		Bucket: props.bucket,
@@ -91,10 +101,9 @@ export async function removeObject(props) {
  * key: string;
  * versionId?: string
  * }} props
- * @returns
  */
 export async function restoreObject(props) {
-	/**@type {import('@aws-sdk/client-s3').RestoreObjectCommand}*/
+	/**@type {import('@aws-sdk/client-s3').RestoreObjectCommandInput}*/
 	const input = {
 		Bucket: props.bucket,
 		Key: props.key,

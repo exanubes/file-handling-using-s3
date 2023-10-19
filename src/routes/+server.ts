@@ -39,8 +39,10 @@ export const GET = async function GET({ url }) {
 	const response = await createDownloadUrl({
 		key: document.key,
 		bucket: Bucket.uploads.bucketName,
-		version
+		version,
+		name: document.name
 	});
+
 	return json({ signedUrl: response }, { status: 200 });
 } satisfies RequestHandler;
 
