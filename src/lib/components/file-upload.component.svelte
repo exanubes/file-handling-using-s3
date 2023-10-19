@@ -1,39 +1,49 @@
 <script>
-    import clsx from 'clsx';
+	import clsx from 'clsx';
+	import Loader from './loader.component.svelte'
+        ;
+	/**@type {string}*/
+	export let name;
 
-    /**@type {string}*/
-    export let name;
+	/**@type {boolean}*/
+	export let multiple = false;
 
-    /**@type {boolean}*/
-    export let multiple = false;
+	/**@type {boolean}*/
+	let active = false;
 
-    /**@type {boolean}*/
-    let active = false;
+	/**@type {boolean}*/
+	export let loading = false;
 </script>
 
 <div
-        class={clsx(
+	class={clsx(
 		active && 'relative border-blue-400',
-		'w-full h-[100px] rounded border-2 border-dashed border-cyan-50 grid place-items-center cursor-pointer'
+		'grid h-[100px] w-full cursor-pointer place-items-center rounded border-2 border-dashed border-cyan-50'
 	)}
 >
-    <p class={clsx(active && 'text-blue-400', 'font-semibold m-0')}>Upload files or drag and drop</p>
-    <input
-            class="w-full absolute top-0 left-0 h-[100px] z-[1] opacity-0 disabled:!opacity-0 cursor-pointer bg-red-300"
-            {multiple}
-            {name}
-            on:change
-            on:dragleave={(event) => {
+	{#if loading}
+		<Loader />
+	{:else}
+		<p class={clsx(active && 'text-blue-400', 'm-0 font-semibold')}>
+			Upload file{multiple ? 's' : ''} or drag and drop
+		</p>
+	{/if}
+	<input
+		class="absolute left-0 top-0 z-[1] h-[100px] w-full cursor-pointer bg-red-300 opacity-0 disabled:!opacity-0"
+		{multiple}
+		{name}
+		on:change
+		on:dragleave={(event) => {
 			event.preventDefault();
 			active = false;
 		}}
-            on:dragover={(event) => {
+		on:dragover={(event) => {
 			event.preventDefault();
 			active = true;
 		}}
-            on:drop={() => {
+		on:drop={() => {
 			active = false;
 		}}
-            type="file"
-    />
+		type="file"
+	/>
 </div>

@@ -4,7 +4,6 @@ import { Bucket } from 'sst/node/bucket';
 import { createDownloadUrl } from '$lib/s3.js';
 import type { RequestHandler } from './$types';
 
-/**@type {import('./$types').RequestHandler} */
 export const POST = async function POST({ request }) {
 	const { files }: PostBody = await request.json();
 
@@ -28,7 +27,6 @@ export const POST = async function POST({ request }) {
 	);
 } satisfies RequestHandler;
 
-/**@type {import('./$types').RequestHandler} */
 export const GET = async function GET({ url }) {
 	const id = url.searchParams.get('id');
 	const version = url.searchParams.get('version');
