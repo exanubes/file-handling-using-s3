@@ -1,4 +1,4 @@
-import { Bucket, StackContext, Topic } from 'sst/constructs';
+import {Bucket, Cron, StackContext, Topic} from 'sst/constructs';
 import { BlockPublicAccess, HttpMethods, StorageClass } from 'aws-cdk-lib/aws-s3';
 import { Duration } from 'aws-cdk-lib';
 
@@ -65,6 +65,18 @@ export function StorageStack({ stack }: StackContext) {
 			}
 		}
 	});
+
+	new Cron(stack, 'cleanup-expired-restored-objects', {
+		schedule: 'rate(1 day)',
+		job: {
+			function: {
+				functionName: 'cleanup-expired-retrieved-glacier-objects',
+				handler: 'packages/functions/src/cleanup.handler',
+				architecture: 'arm_64',
+				permissions: []
+			}
+		}
+	})
 
 	return { bucket };
 }
