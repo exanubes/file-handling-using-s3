@@ -1,8 +1,10 @@
-import {Bucket, Cron, StackContext, Topic} from 'sst/constructs';
+import { Bucket, Cron, StackContext, Topic, use } from 'sst/constructs';
 import { BlockPublicAccess, HttpMethods, StorageClass } from 'aws-cdk-lib/aws-s3';
 import { Duration } from 'aws-cdk-lib';
+import { ConfigStack } from './config.stack';
 
 export function StorageStack({ stack }: StackContext) {
+	const { url, authToken } = use(ConfigStack);
 	const topic = new Topic(stack, 'objectRestored', {
 		subscribers: {
 			notificationEmail: {
@@ -19,7 +21,8 @@ export function StorageStack({ stack }: StackContext) {
 				function: {
 					functionName: 'object-restored-status-update',
 					handler: 'packages/functions/src/object-restored-status-update.handler',
-					architecture: 'arm_64'
+					architecture: 'arm_64',
+					bind: [url, authToken],
 				}
 			}
 		}
@@ -70,13 +73,14 @@ export function StorageStack({ stack }: StackContext) {
 		schedule: 'rate(1 day)',
 		job: {
 			function: {
-				functionName: 'cleanup-expired-retrieved-glacier-objects',
+				functionName: 'cleanup-expired-glacier-objects',
 				handler: 'packages/functions/src/cleanup.handler',
 				architecture: 'arm_64',
-				permissions: []
+				permissions: [],
+				bind: [url, authToken],
 			}
 		}
-	})
+	});
 
 	return { bucket };
 }

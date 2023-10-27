@@ -1,6 +1,7 @@
 import type { SSTConfig } from 'sst';
 import { StorageStack } from './stacks/storage.stack';
 import { SiteStack } from './stacks/site.stack';
+import { ConfigStack } from './stacks/config.stack';
 
 export default {
 	config(_input) {
@@ -10,6 +11,6 @@ export default {
 		};
 	},
 	stacks(app) {
-		app.stack(StorageStack).stack(SiteStack);
+		app.stack(ConfigStack).stack(StorageStack).stack(SiteStack);
 	}
 } satisfies SSTConfig;
