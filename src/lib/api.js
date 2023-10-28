@@ -68,3 +68,17 @@ export async function completeMultipartUpload(body) {
 		body: JSON.stringify(body)
 	});
 }
+
+/**
+ * @description sends a http POST request to abort an in-progress multipart-upload
+ * @param {{uploadId: string; key: string;}} body
+ * */
+export async function abortMultipartUpload(body) {
+	return fetch('/multipart-upload/abort', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
+}
