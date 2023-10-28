@@ -5,7 +5,8 @@ import {
 	GetObjectCommand,
 	ListObjectVersionsCommand,
 	RestoreObjectCommand,
-	S3Client
+	S3Client,
+	UploadPartCommand
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { versionResponseValidator } from '$lib/validators.js';
@@ -137,4 +138,34 @@ export async function startMultipartUpload(props) {
 	const command = new CreateMultipartUploadCommand(input);
 
 	return client.send(command);
+}
+
+/**
+ * @description generate a signed url for each part of the multipart upload
+ * @param {{
+ *     bucket: string;
+ *     key: string;
+ *     uploadId: string;
+ *     parts: number;
+ * }} props
+ * */
+export async function getMultipartUrls(props) {
+	const input = {
+		Bucket: props.bucket,
+		Key: props.key,
+		UploadId: props.uploadId,
+		PartNumber: 0
+	};
+
+	const parts = Array.from({ length: props.parts }, (_, index) => index + 1);
+
+	return Promise.all(
+		parts.map((partNumber) => {
+			const command = new UploadPartCommand({
+				...input,
+				PartNumber: partNumber
+			});
+			return getSignedUrl(client, command, { expiresIn: 600 });
+		})
+	);
 }
