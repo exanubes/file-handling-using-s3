@@ -1,5 +1,6 @@
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import {
+	CompleteMultipartUploadCommand,
 	CreateMultipartUploadCommand,
 	DeleteObjectCommand,
 	GetObjectCommand,
@@ -168,4 +169,28 @@ export async function getMultipartUrls(props) {
 			return getSignedUrl(client, command, { expiresIn: 600 });
 		})
 	);
+}
+
+/**
+ * @description Completes the multipart upload and places the object inside the target bucket
+ * @param {{
+ *     bucket: string;
+ *     key: string;
+ *     uploadId: string;
+ *     parts: import('@aws-sdk/client-s3').CompletedPart[]
+ * }} props
+ * */
+export async function completeMultipartUpload(props) {
+	const input = {
+		Bucket: props.bucket,
+		Key: props.key,
+		UploadId: props.uploadId,
+		MultipartUpload: {
+			Parts: props.parts
+		}
+	};
+
+	const command = new CompleteMultipartUploadCommand(input);
+
+	return client.send(command);
 }
