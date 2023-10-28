@@ -30,7 +30,7 @@ export function confirmNewVersion(id, body) {
 }
 
 /**
- * @description slice file into parts and upload each part using signed urls
+ * @description slices file into parts and uploads each part to aws using http PUT request and signed urls
  * @param {Blob} file
  * @param {string[]} signedUrls
  * */
@@ -53,4 +53,18 @@ export async function uploadPartsToS3(file, signedUrls) {
 			};
 		})
 	);
+}
+
+/**
+ * @description sends a http POST request to complete the multipart-upload
+ * @param {{uploadId: string; key: string; name: string; uploadedParts: import('@aws-sdk/client-s3').CompletedPart[]}} body
+ * */
+export async function completeMultipartUpload(body) {
+	return fetch('/multipart-upload', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
 }
