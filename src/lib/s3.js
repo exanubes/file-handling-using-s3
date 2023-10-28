@@ -2,7 +2,8 @@ import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import {
 	DeleteObjectCommand,
 	GetObjectCommand,
-	ListObjectVersionsCommand, RestoreObjectCommand,
+	ListObjectVersionsCommand,
+	RestoreObjectCommand,
 	S3Client
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -101,6 +102,7 @@ export async function removeObject(props) {
  * key: string;
  * versionId?: string
  * }} props
+ * @returns
  */
 export async function restoreObject(props) {
 	/**@type {import('@aws-sdk/client-s3').RestoreObjectCommandInput}*/
@@ -114,9 +116,9 @@ export async function restoreObject(props) {
 				Tier: 'Expedited'
 			}
 		}
-	}
+	};
 
 	const command = new RestoreObjectCommand(input);
 
-	return client.send(command)
+	return client.send(command);
 }
