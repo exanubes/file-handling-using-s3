@@ -12,6 +12,11 @@ export function saveUploadedDocuments(body) {
 	});
 }
 
+/**
+ * @description sends a http POST request to save changes to an existing database document
+ * @param {string} id;
+ * @param {{name: string}} body
+ * */
 export function confirmNewVersion(id, body) {
 	return fetch(`/documents/${id}`, {
 		method: 'POST',
