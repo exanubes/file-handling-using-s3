@@ -1,5 +1,6 @@
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import {
+	AbortMultipartUploadCommand,
 	CompleteMultipartUploadCommand,
 	CreateMultipartUploadCommand,
 	DeleteObjectCommand,
@@ -191,6 +192,26 @@ export async function completeMultipartUpload(props) {
 	};
 
 	const command = new CompleteMultipartUploadCommand(input);
+
+	return client.send(command);
+}
+
+/**
+ * @description cancels an in-progress multipart upload and removes already uploaded parts from temporary storage
+ * @param {{
+ *     bucket: string;
+ *     key: string;
+ *     uploadId: string;
+ * }} props
+ * */
+export async function abortMultipartUpload(props) {
+	const input = {
+		Bucket: props.bucket,
+		Key: props.key,
+		UploadId: props.uploadId
+	};
+
+	const command = new AbortMultipartUploadCommand(input);
 
 	return client.send(command);
 }
