@@ -11,6 +11,8 @@
 	/** @type {HTMLFormElement}*/
 	let form;
 
+	let loading = false;
+
 	/**@type {import('@sveltejs/kit').SubmitFunction}*/
 	function handleSubmit({ formData }) {
 		const file = formData.get('file');
@@ -18,6 +20,7 @@
 		const isMultipart = file.size / MINIMUM_SIZE_FOR_MULTIPART_UPLOAD > 1;
 		if (!isMultipart) alert('not big enough');
 		formData.set('parts', Math.floor(file.size / MINIMUM_PART_SIZE));
+		loading = true;
 		return async ({ update, result }) => {
 			update();
 			if (result.type === 'success') {
@@ -38,6 +41,8 @@
 						key: result.data.key
 					});
 					alert(error);
+				} finally {
+					loading = false;
 				}
 			}
 		};
@@ -75,6 +80,7 @@
 		on:change={() => {
 			form.requestSubmit();
 		}}
+		{loading}
 	/>
 </form>
 
