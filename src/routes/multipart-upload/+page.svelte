@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import FileUpload from '$lib/components/file-upload.component.svelte';
 	import { MINIMUM_PART_SIZE, MINIMUM_SIZE_FOR_MULTIPART_UPLOAD } from '$lib/const.js';
-	import { completeMultipartUpload, uploadPartsToS3 } from '$lib/api.js';
+	import { abortMultipartUpload, completeMultipartUpload, uploadPartsToS3 } from '$lib/api.js';
 	import { invalidate } from '$app/navigation';
 
 	/** @type {import('./$types').PageData} */
@@ -21,16 +21,24 @@
 		return async ({ update, result }) => {
 			update();
 			if (result.type === 'success') {
-				const response = await uploadPartsToS3(file, result.data.urls);
+				try {
+					const response = await uploadPartsToS3(file, result.data.urls);
 
-				await completeMultipartUpload({
-					uploadId: result.data.uploadId,
-					key: result.data.key,
-					name: file.name,
-					uploadedParts: response
-				});
+					await completeMultipartUpload({
+						uploadId: result.data.uploadId,
+						key: result.data.key,
+						name: file.name,
+						uploadedParts: response
+					});
 
-				await invalidate('/multipart-upload');
+					await invalidate('/multipart-upload');
+				} catch (error) {
+					await abortMultipartUpload({
+						uploadId: result.data.uploadId,
+						key: result.data.key
+					});
+					alert(error);
+				}
 			}
 		};
 	}
