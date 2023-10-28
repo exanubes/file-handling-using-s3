@@ -1,5 +1,6 @@
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import {
+	CreateMultipartUploadCommand,
 	DeleteObjectCommand,
 	GetObjectCommand,
 	ListObjectVersionsCommand,
@@ -119,6 +120,21 @@ export async function restoreObject(props) {
 	};
 
 	const command = new RestoreObjectCommand(input);
+
+	return client.send(command);
+}
+
+/**
+ * @description Begins a multipart uploads and returns an Upload Id that has to be used when generating signed urls for each part
+ * @param {{bucket: string; key: string;}} props
+ * */
+export async function startMultipartUpload(props) {
+	const input = {
+		Bucket: props.bucket,
+		Key: props.key
+	};
+
+	const command = new CreateMultipartUploadCommand(input);
 
 	return client.send(command);
 }
