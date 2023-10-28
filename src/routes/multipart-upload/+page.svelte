@@ -1,6 +1,9 @@
 <script>
 	import { enhance } from '$app/forms';
 	import FileUpload from '$lib/components/file-upload.component.svelte';
+	import { MINIMUM_PART_SIZE, MINIMUM_SIZE_FOR_MULTIPART_UPLOAD } from '$lib/const.js';
+	import { completeMultipartUpload, uploadPartsToS3 } from '$lib/api.js';
+	import { invalidate } from '$app/navigation';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -12,10 +15,22 @@
 	function handleSubmit({ formData }) {
 		const file = formData.get('file');
 		formData.delete('file');
+		const isMultipart = file.size / MINIMUM_SIZE_FOR_MULTIPART_UPLOAD > 1;
+		if (!isMultipart) alert('not big enough');
+		formData.set('parts', Math.floor(file.size / MINIMUM_PART_SIZE));
 		return async ({ update, result }) => {
 			update();
 			if (result.type === 'success') {
-				console.log(file);
+				const response = await uploadPartsToS3(file, result.data.urls);
+
+				await completeMultipartUpload({
+					uploadId: result.data.uploadId,
+					key: result.data.key,
+					name: file.name,
+					uploadedParts: response
+				});
+
+				await invalidate('/multipart-upload');
 			}
 		};
 	}
