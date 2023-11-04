@@ -106,7 +106,6 @@ export async function removeObject(props) {
  * key: string;
  * versionId?: string
  * }} props
- * @returns
  */
 export async function restoreObject(props) {
 	/**@type {import('@aws-sdk/client-s3').RestoreObjectCommandInput}*/

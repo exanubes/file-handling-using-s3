@@ -29,7 +29,7 @@
 			void onDownload();
 		}
 	}
-
+	let restoring = false;
 	/**@description Request retrieving an archived document
 	 * @param {string} versionId */
 	function handleRestore(versionId) {
@@ -41,8 +41,10 @@
 				},
 				body: JSON.stringify({ versionId })
 			});
+			restoring = true;
 		};
 	}
+
 	const isArchived = version.isArchived && !version.restoredUntil;
 </script>
 
@@ -51,8 +53,8 @@
 		tabindex="0"
 		role="button"
 		style={{ all: 'unset' }}
-		on:click={isArchived ? undefined : onDownload}
-		on:keydown={isArchived ? undefined : handleKeyDown}
+		on:click={isArchived || version.deleted ? undefined : onDownload}
+		on:keydown={isArchived || version.deleted ? undefined : handleKeyDown}
 	>
 		<p
 			class={clsx(
@@ -73,7 +75,7 @@
 				<small
 					>restored until {format(new Date(version.restoredUntil), 'MMM do, yyyy HH:mma')}</small
 				>
-			{:else if version.restoredStatus === 'pending'}
+			{:else if version.restoredStatus === 'pending' || restoring}
 				<small class="italic text-yellow-500">restoring...</small>
 			{:else}
 				<small class="italic text-gray-300">archived</small>

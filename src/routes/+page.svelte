@@ -37,10 +37,9 @@
 							name: files[index].name
 						}))
 					});
+					await invalidate('/');
 				} catch (error) {
 					alert(error);
-				} finally {
-					await invalidate('/');
 				}
 			}
 		};
