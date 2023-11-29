@@ -1,7 +1,7 @@
-import { Bucket, Cron, StackContext, Topic, use } from 'sst/constructs';
-import { BlockPublicAccess, HttpMethods, StorageClass } from 'aws-cdk-lib/aws-s3';
-import { Duration } from 'aws-cdk-lib';
-import { ConfigStack } from './config.stack';
+import {Bucket, Cron, StackContext, Topic, use} from 'sst/constructs';
+import {BlockPublicAccess, HttpMethods, StorageClass} from 'aws-cdk-lib/aws-s3';
+import {Duration} from 'aws-cdk-lib';
+import {ConfigStack} from './config.stack';
 
 export function StorageStack({ stack }: StackContext) {
 	const { url, authToken } = use(ConfigStack);
@@ -32,9 +32,10 @@ export function StorageStack({ stack }: StackContext) {
 		name: 'exanubes-upload-bucket-sst',
 		cors: [
 			{
-				allowedMethods: [HttpMethods.POST],
+				allowedMethods: [HttpMethods.POST, HttpMethods.PUT],
 				allowedOrigins: ['http://localhost:5173'],
-				allowedHeaders: ['*']
+				allowedHeaders: ['*'],
+				exposedHeaders: ['etag']
 			}
 		],
 		cdk: {
@@ -43,6 +44,7 @@ export function StorageStack({ stack }: StackContext) {
 				versioned: true,
 				lifecycleRules: [
 					{
+						abortIncompleteMultipartUploadAfter: Duration.days(1),
 						enabled: true,
 						noncurrentVersionTransitions: [
 							{
