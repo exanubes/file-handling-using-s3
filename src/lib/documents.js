@@ -19,6 +19,9 @@ export async function createDocument(props) {
 	return id;
 }
 
+/**
+ * @description returns all document references from the database
+ * */
 export async function listDocuments() {
 	const response = await databaseClient.execute('SELECT * FROM documents');
 
@@ -38,6 +41,11 @@ export async function getDocument(id) {
 	return document ? documentValidator.parse(document) : null;
 }
 
+/**
+ * @description updates document name and sets deleted to false, this is a simplification because
+ * the only way to update a document is to upload a new version
+ * @param {{id: string; name: string;}} props
+ * */
 export async function updateDocument(props) {
 	await databaseClient.execute({
 		sql: 'UPDATE documents SET name = ?, deleted = false WHERE id = ?',
@@ -45,6 +53,10 @@ export async function updateDocument(props) {
 	});
 }
 
+/**
+ * @description sets document's deleted property to true
+ * @param {string} id
+ * */
 export async function removeDocument(id) {
 	await databaseClient.execute({
 		sql: `UPDATE documents SET deleted = true WHERE id = ?`,
