@@ -1,38 +1,42 @@
-# create-svelte
+# File handling with s3
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This example project serves as an exploration of Amazon Simple Storage Service (S3) capabilities, showcasing an implementation of some key features for developers. The project focuses on various aspects, including upload and download functionalities using signed URLs, bucket versioning, archiving, retrieval, and multipart uploads.
 
-## Creating a project
+The project uses [SST](https://sst.dev) for deploying AWS Resources and [Turso](https://turso.tech) for storing data in a SQLite Database.
+UI is built with [SvelteKit](https://kit.svelte.dev/) but can be easily replaced with a technology of your choosing. [React Form](https://react.email/) is used for
+composing a HTML Email.
 
-If you're seeing this, you've probably already done this step. Congrats!
+**TOC:**
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+1. [Signed URLs for Secure Uploads and Downloads](#signed-urls-for-secure-uploads-and-downloads)
+2. [Bucket Versioning](#bucket-versioning)
+3. [Archiving and Retrieval](#archiving-and-retrieval)
+4. [Multipart Uploads](#multipart-uploads)
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Signed URLs for Secure Uploads and Downloads
 
-## Developing
+Demonstrates the implementation of AWS S3 signed URLs to securely upload and download files. This ensures that only authorized users with the correct credentials can perform these actions.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+[🎥 Video](https://www.youtube.com/watch?v=1nmJldXxgGY) <br/>
+[✍️ Article](https://exanubes/blog/upload-and-download-files-using-signed-urls)
 
-```bash
-npm run dev
+## Bucket Versioning
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+Illustrates the benefits of enabling bucket versioning in AWS S3, allowing for the management of different versions of objects within a bucket. This feature enhances data protection and provides a mechanism for easy rollback in case of unintended modifications.
 
-## Building
+## Archiving and Retrieval
 
-To create a production version of your app:
+Explores the archival capabilities of AWS S3, demonstrating how to seamlessly transition objects between storage classes to optimize costs while ensuring efficient data retrieval when needed.
 
-```bash
-npm run build
-```
+## Multipart Uploads
 
-You can preview the production build with `npm run preview`.
+Provides a detailed guide on leveraging multipart uploads for large file transfers to AWS S3. This feature enhances upload reliability and performance by breaking files into smaller parts, especially useful for handling large datasets.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Getting Started
+
+- Configure AWS credentials using the AWS CLI
+- Install dependencies with `npm install` (assuming Node.js is installed).
+- Deploy infrastructure to aws with `npx sst dev`
+- Launch app with `npm run dev`
+
+Feel free to use and extend this project as a foundation for integrating AWS S3 features into your applications. If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request. Happy coding!
