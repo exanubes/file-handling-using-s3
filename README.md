@@ -24,9 +24,15 @@ Demonstrates the implementation of AWS S3 signed URLs to securely upload and dow
 
 Illustrates the benefits of enabling bucket versioning in AWS S3, allowing for the management of different versions of objects within a bucket. This feature enhances data protection and provides a mechanism for easy rollback in case of unintended modifications.
 
+[🎥 Video](https://youtu.be/pS3OD_G7LxQ) <br/>
+[✍️ Article](https://exanubes/blog/versioning-documents-in-amazon-s3)
+
 ## Archiving and Retrieval
 
 Explores the archival capabilities of AWS S3, demonstrating how to seamlessly transition objects between storage classes to optimize costs while ensuring efficient data retrieval when needed.
+
+[🎥 Video](https://youtu.be/Bqegwv7DDas) <br/>
+[✍️ Article](https://exanubes/blog/s3-lifecycle-rules-archiving-and-retrieval)
 
 ## Multipart Uploads
 
