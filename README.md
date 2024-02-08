@@ -17,26 +17,29 @@ composing a HTML Email.
 
 Demonstrates the implementation of AWS S3 signed URLs to securely upload and download files. This ensures that only authorized users with the correct credentials can perform these actions.
 
-[🎥 Video](https://www.youtube.com/watch?v=1nmJldXxgGY) <br/>
-[✍️ Article](https://exanubes/blog/upload-and-download-files-using-signed-urls)
+[🎥 Video](https://youtu.be/1nmJldXxgGY) <br/>
+[✍️ Article](https://exanubes.com/blog/upload-and-download-files-using-signed-urls)
 
 ## Bucket Versioning
 
 Illustrates the benefits of enabling bucket versioning in AWS S3, allowing for the management of different versions of objects within a bucket. This feature enhances data protection and provides a mechanism for easy rollback in case of unintended modifications.
 
 [🎥 Video](https://youtu.be/pS3OD_G7LxQ) <br/>
-[✍️ Article](https://exanubes/blog/versioning-documents-in-amazon-s3)
+[✍️ Article](https://exanubes.com/blog/versioning-documents-in-amazon-s3)
 
 ## Archiving and Retrieval
 
 Explores the archival capabilities of AWS S3, demonstrating how to seamlessly transition objects between storage classes to optimize costs while ensuring efficient data retrieval when needed.
 
 [🎥 Video](https://youtu.be/Bqegwv7DDas) <br/>
-[✍️ Article](https://exanubes/blog/s3-lifecycle-rules-archiving-and-retrieval)
+[✍️ Article](https://exanubes.com/blog/s3-lifecycle-rules-archiving-and-retrieval)
 
 ## Multipart Uploads
 
 Provides a detailed guide on leveraging multipart uploads for large file transfers to AWS S3. This feature enhances upload reliability and performance by breaking files into smaller parts, especially useful for handling large datasets.
+
+[🎥 Video](https://youtu.be/U2SVFyU_7Co) <br/>
+[✍️ Article](https://exanubes.com/blog/s3-multipart-upload-with-signed-urls)
 
 ## Getting Started
 
